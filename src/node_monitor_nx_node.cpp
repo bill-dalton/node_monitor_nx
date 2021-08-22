@@ -104,35 +104,38 @@ int main(int argc, char* argv[]){
 			//std::cout << "all good" << std::endl;
 		//}
 		if (minion_controller_good) {
-			std::cout << "minion_controller_good" << std::endl;
+			std::cout << "minion_controller GOOD" << std::endl;
 		} else {
-			std::cout << "minion_controller FAIL" << std::endl;
+			std::cout << "minion_controller       FAIL" << std::endl;
 		}
 				
 		if (pick_place_good) {
-			std::cout << "pick_place_good" << std::endl;
+			std::cout << "pick_place        GOOD" << std::endl;
 		} else {
-			std::cout << "pick_place FAIL" << std::endl;
+			std::cout << "pick_place              FAIL" << std::endl;
 		}
 					
 		if (my_node_detectnet_good) {
-			std::cout << "my_node_detectnet_good" << std::endl;
+			std::cout << "my_node_detectnet GOOD" << std::endl;
 		} else {
-			std::cout << "my_node_detectnet FAIL" << std::endl;
+			std::cout << "my_node_detectnet       FAIL" << std::endl;
 		}
 				
 		if (fiducial_service_good) {
-			std::cout << "fiducial_service_good" << std::endl;
+			std::cout << "fiducial_service  GOOD" << std::endl;
 		} else {
-			std::cout << "fiducial_service FAIL" << std::endl;
+			std::cout << "fiducial_service        FAIL" << std::endl;
 		}
 					
 		if (finder_service_good) {
-			std::cout << "finder_service_good" << std::endl;
+			std::cout << "finder_service    GOOD" << std::endl;
 		} else {
-			std::cout << "finder_service FAIL" << std::endl;
+			std::cout << "finder_service          FAIL" << std::endl;
 		}			
-				
+		
+		//ouput a blank line for clearer formating
+		std::cout << " " << std::endl;
+			
 		//spin and sleep
 		ros::spinOnce();
 		r.sleep();
