@@ -1,5 +1,5 @@
 /*
- * $ rosrun node_monitor_nx node_monitor_nx_node
+ * $ rosrun node_monitor_nx node_monitor_nx_node verbose
  */
 
 #include <ros/ros.h>
@@ -19,7 +19,7 @@ bool pick_place_good = false;
 bool my_node_detectnet_good = false;
 bool fiducial_service_good = false;
 bool finder_service_good = false;
-bool debug = false;
+bool verbose = false;
 
 //subscribers
 ros::Subscriber minion_controller_sub;
@@ -71,16 +71,18 @@ void finderServiceRecdCallback(const std_msgs::Int16& finder_service_msg_){
 
 int main(int argc, char* argv[]){	
 	//vars
-	char debug_cmd[] = "debug";   //debug command line arg
+	char verbose_cmd[] = "verbose";   //verbose command line arg
 	
 	//init
 	ros::init(argc, argv, "node_monitor_nx_node");
 	ros::NodeHandle nh;
 
-	if (argc > 1 && strcmp(argv[1], debug_cmd) == 0){
-		debug = true;
-		ROS_INFO("debug=true");
-	}
+	if (argc > 1 && strcmp(argv[1], verbose_cmd) == 0){
+		verbose = true;
+		ROS_INFO("verbose=true");
+	} else {
+		ROS_INFO("verbose=false");
+	}		
 	
 	ros::AsyncSpinner spinner(1);	//one thread
 	spinner.start();
