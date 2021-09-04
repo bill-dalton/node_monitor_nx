@@ -89,11 +89,11 @@ int main(int argc, char* argv[]){
 	ros::Rate r(0.33333);	//loop rate in Hertz 0.3333 means loop attempt to run once every 3 seconds
 	
 	//subscribers
-	ros::Subscriber minion_controller_sub = nh.subscribe("minion_controller_watchdog", 10, minionControllerRecdCallback);
-	ros::Subscriber pick_place_sub = nh.subscribe("pick_place_watchdog", 10, pickPlaceRecdCallback);
-	ros::Subscriber my_node_detectnet_sub = nh.subscribe("my_node_detectnet_watchdog", 10, myNodeDetectnetRecdCallback);
-	ros::Subscriber fiducial_service_sub = nh.subscribe("fiducial_service_watchdog", 10, fiducialServiceRecdCallback);
-	ros::Subscriber finder_service_sub = nh.subscribe("finder_service_watchdog", 10, finderServiceRecdCallback);
+	ros::Subscriber minion_controller_sub = nh.subscribe("minion_controller_watchdog", 1, minionControllerRecdCallback);
+	ros::Subscriber pick_place_sub = nh.subscribe("pick_place_watchdog", 1, pickPlaceRecdCallback);
+	ros::Subscriber my_node_detectnet_sub = nh.subscribe("my_node_detectnet_watchdog", 1, myNodeDetectnetRecdCallback);
+	ros::Subscriber fiducial_service_sub = nh.subscribe("fiducial_service_watchdog", 1, fiducialServiceRecdCallback);
+	ros::Subscriber finder_service_sub = nh.subscribe("finder_service_watchdog", 1, finderServiceRecdCallback);
 
 	while (nh.ok()){
 		//check to see if nodes are good
@@ -138,6 +138,13 @@ int main(int argc, char* argv[]){
 		//ouput a blank line for clearer formating
 		std::cout << " " << std::endl;
 			
+		//set all flags to fail so that inactivity on a topic will cause a FAIL message
+		minion_controller_good = false;
+		pick_place_good = false;
+		my_node_detectnet_good = false;
+		fiducial_service_good = false;
+		finder_service_good = false;
+		
 		//spin and sleep
 		ros::spinOnce();
 		r.sleep();
