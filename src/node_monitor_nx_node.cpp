@@ -1,5 +1,31 @@
 /*
- * $ rosrun node_monitor_nx node_monitor_nx_node verbose
+ * Functionality
+ * 	runs in its own terminal window, started as follows
+ * 		$ rosrun node_monitor_nx node_monitor_nx_node verbose
+ * 	Monitors my ROS nodes and my minions for failures
+ * 	runs as ros::rate of 0.333 so it published every 3 seconds
+ *  Indicates 'GOOD' or 'FAIL' for each
+ * 
+ * Nodes
+ * 	Each of the following nodes periodically publishes an ever increasing Int16 counter.
+ *  As long as the counter keeps increasing the node is considered good:
+ * 		minion_controller
+ * 		pick_place
+ * 		my_node_detectnet
+ * 		fiducial_service
+ * 		finder_service
+ * 
+ * Minions
+ * 	The minion messages are simply monitored to see that they are still sending. No counter is used
+ * 		BR_minion
+ * 		SL_minion
+ * 		EL_minion
+ * 		LR_minion
+ * 		WL_minion
+ * 		WR_minion
+ * 		finger_012_minion
+ * 		finger_345_minion
+ * 
  */
 
 #include <ros/ros.h>
@@ -29,6 +55,8 @@ bool EL_minion_good = false;
 bool LR_minion_good = false;
 bool WL_minion_good = false;
 bool WR_minion_good = false;
+bool finger_012_minion_good = false;
+bool finger_345_minion_good = false;
 bool verbose = false;
 
 //subscribers
@@ -103,6 +131,12 @@ void WLMinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_stat
 void WRMinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
 	WR_minion_good = true;
 }
+void Finger012MinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
+	finger_012_minion_good = true;
+}
+void Finger345MinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
+	finger_345_minion_good = true;
+}
 
 //************ MAIN ****************//
 int main(int argc, char* argv[]){	
@@ -137,6 +171,8 @@ int main(int argc, char* argv[]){
 	ros::Subscriber LR_minion_state_sub = nh.subscribe("LR_minion_state", 1000, LRMinionStateRecdCallback);
 	ros::Subscriber WL_minion_state_sub = nh.subscribe("WL_joint_state", 1000, WLMinionStateRecdCallback);//note xx_joint_state for Dynamixel versions versus xx_minion_state for Teensy versions
 	ros::Subscriber WR_minion_state_sub = nh.subscribe("WR_joint_state", 1000, WRMinionStateRecdCallback);
+	ros::Subscriber finger_012_minion_state_sub = nh.subscribe("finger_pos_012", 1000, Finger012MinionStateRecdCallback);
+	ros::Subscriber finger_345_minion_state_sub = nh.subscribe("finger_pos_345", 1000, Finger345MinionStateRecdCallback);
 
 	while (nh.ok()){
 		//check to see if nodes are good
@@ -220,6 +256,18 @@ int main(int argc, char* argv[]){
 			std::cout << "WR_minion	        FAIL" << std::endl;
 		}			
 		
+		if (finger_012_minion_good) {
+			std::cout << "finger_012  	  GOOD" << std::endl;
+		} else {
+			std::cout << "finger_012        	FAIL" << std::endl;
+		}			
+		
+		if (finger_345_minion_good) {
+			std::cout << "finger_345  	  GOOD" << std::endl;
+		} else {
+			std::cout << "finger_345        	FAIL" << std::endl;
+		}			
+		
 		//ouput a blank line for clearer formating
 		std::cout << " " << std::endl;
 			
@@ -236,6 +284,8 @@ int main(int argc, char* argv[]){
 		LR_minion_good = false;
 		WL_minion_good = false;
 		WR_minion_good = false;
+		finger_012_minion_good = false;
+		finger_345_minion_good = false;
 		
 		//spin and sleep
 		ros::spinOnce();
