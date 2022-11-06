@@ -55,8 +55,9 @@ bool EL_minion_good = false;
 bool LR_minion_good = false;
 bool WL_minion_good = false;
 bool WR_minion_good = false;
-bool finger_012_minion_good = false;
-bool finger_345_minion_good = false;
+bool gripper_dist_cam_good = false;
+bool gripper_pos_force_good = false;
+bool orientation_hand_good = false;
 bool verbose = false;
 
 //subscribers
@@ -131,11 +132,14 @@ void WLMinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_stat
 void WRMinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
 	WR_minion_good = true;
 }
-void Finger012MinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
-	finger_012_minion_good = true;
+void GripperDistCamRecdCallback(const geometry_msgs::Vector3& msg_){
+	gripper_dist_cam_good = true;
 }
-void Finger345MinionStateRecdCallback(const geometry_msgs::Vector3& minion_Vector3_state_msg_){
-	finger_345_minion_good = true;
+void GripperPosForceRecdCallback(const geometry_msgs::Vector3& msg_){
+	gripper_pos_force_good = true;
+}
+void OrientationHandRecdCallback(const geometry_msgs::Vector3& msg_){
+	orientation_hand_good = true;
 }
 
 //************ MAIN ****************//
@@ -171,8 +175,9 @@ int main(int argc, char* argv[]){
 	ros::Subscriber LR_minion_state_sub = nh.subscribe("LR_minion_state", 1000, LRMinionStateRecdCallback);
 	ros::Subscriber WL_minion_state_sub = nh.subscribe("WL_joint_state", 1000, WLMinionStateRecdCallback);//note xx_joint_state for Dynamixel versions versus xx_minion_state for Teensy versions
 	ros::Subscriber WR_minion_state_sub = nh.subscribe("WR_joint_state", 1000, WRMinionStateRecdCallback);
-	ros::Subscriber finger_012_minion_state_sub = nh.subscribe("finger_pos_012", 1000, Finger012MinionStateRecdCallback);
-	ros::Subscriber finger_345_minion_state_sub = nh.subscribe("finger_pos_345", 1000, Finger345MinionStateRecdCallback);
+	ros::Subscriber gripper_dist_cam_sub = nh.subscribe("gripper_dist_cam", 1000, GripperDistCamRecdCallback);
+	ros::Subscriber gripper_pos_force_sub = nh.subscribe("gripper_pos_force", 1000, GripperPosForceRecdCallback);
+	ros::Subscriber orientation_hand_sub = nh.subscribe("orientation_hand", 1000, OrientationHandRecdCallback);
 
 	while (nh.ok()){
 		//check to see if nodes are good
@@ -256,16 +261,22 @@ int main(int argc, char* argv[]){
 			std::cout << "WR_minion	        FAIL" << std::endl;
 		}			
 		
-		if (finger_012_minion_good) {
-			std::cout << "finger_012  	  GOOD" << std::endl;
+		if (gripper_dist_cam_good) {
+			std::cout << "gripper_dist_cam  GOOD" << std::endl;
 		} else {
-			std::cout << "finger_012        	FAIL" << std::endl;
+			std::cout << "gripper_dist_cam 		FAIL" << std::endl;
 		}			
 		
-		if (finger_345_minion_good) {
-			std::cout << "finger_345  	  GOOD" << std::endl;
+		if (gripper_pos_force_good) {
+			std::cout << "gripper_pos_force GOOD" << std::endl;
 		} else {
-			std::cout << "finger_345        	FAIL" << std::endl;
+			std::cout << "gripper_pos_force 	FAIL" << std::endl;
+		}			
+
+		if (orientation_hand_good) {
+			std::cout << "orientation_hand  GOOD" << std::endl;
+		} else {
+			std::cout << "orientation_hand 		FAIL" << std::endl;
 		}			
 		
 		//ouput a blank line for clearer formating
@@ -284,8 +295,9 @@ int main(int argc, char* argv[]){
 		LR_minion_good = false;
 		WL_minion_good = false;
 		WR_minion_good = false;
-		finger_012_minion_good = false;
-		finger_345_minion_good = false;
+		gripper_dist_cam_good = false;
+		gripper_pos_force_good = false;
+		orientation_hand_good = false;
 		
 		//spin and sleep
 		ros::spinOnce();
